@@ -215,7 +215,12 @@ struct CourseView: View {
                 if viewState.width > 120 {
                     close()
                 } else {
-                    viewState = value.translation
+                    // 变化值的差值有时候会偏大，导致拖拽过程可能不是很平滑（类似掉帧）
+//                    viewState = value.translation
+                    // 带上动画效果避免掉帧的情况
+                    withAnimation(.closeCard) {
+                        viewState = value.translation
+                    }
                 }
             }
             .onEnded { value in
