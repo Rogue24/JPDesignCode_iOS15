@@ -29,11 +29,13 @@ struct SignInView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Sign In")
                 .font(.largeTitle.bold())
+                .blendMode(.overlay)
                 .opacity(appear[0] ? 1 : 0)
                 .offset(y: appear[0] ? 0 : 20)
             
             Text("Access 999+ hours of courses, tutorials and livestreams")
                 .font(.headline)
+                .foregroundColor(.primary.opacity(0.7))
                 .opacity(appear[1] ? 1 : 0)
                 .offset(y: appear[1] ? 0 : 20)
             
@@ -103,7 +105,9 @@ struct SignInView: View {
                 HStack {
                     Text("No account yet?")
                     Button {
-                        model.selectedModal = .signUp
+                        withAnimation {
+                            model.selectedModal = .signUp
+                        }
                     } label: {
                         Text("**Sign up**")
                     }
@@ -123,6 +127,8 @@ struct SignInView: View {
             Circle()
                 .fill(circleColor)
                 .frame(width: 68, height: 68)
+                .scaleEffect(appear[0] ? 1 : 0.1)
+                .opacity(appear[0] ? 1 : 0)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .offset(y: circleY)
         )
@@ -142,13 +148,13 @@ struct SignInView: View {
             }
         }
         .onAppear {
-            withAnimation(.spring().delay(0.1)) {
+            withAnimation(.spring().delay(0.2)) {
                 appear[0] = true
             }
-            withAnimation(.spring().delay(0.2)) {
+            withAnimation(.spring().delay(0.4)) {
                 appear[1] = true
             }
-            withAnimation(.spring().delay(0.3)) {
+            withAnimation(.spring().delay(0.6)) {
                 appear[2] = true
             }
         }

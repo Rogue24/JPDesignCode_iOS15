@@ -26,6 +26,7 @@ extension View {
 
 struct StrokeModifier: ViewModifier {
     let cornerRadius: CGFloat
+    let style: RoundedCornerStyle
     
     // 自定义的`Modifier`都可以通过`@Environment`获取【所处视图树】下设置的环境变量
     // 获取当前颜色主题（浅/深色模式）
@@ -34,7 +35,7 @@ struct StrokeModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                RoundedRectangle(cornerRadius: cornerRadius, style: style)
                     .stroke(
                         .linearGradient(
                             colors: [
@@ -51,7 +52,7 @@ struct StrokeModifier: ViewModifier {
 }
 
 extension View {
-    func strokeStyle(cornerRadius: CGFloat = 30) -> some View {
-        modifier(StrokeModifier(cornerRadius: cornerRadius))
+    func strokeStyle(cornerRadius: CGFloat = 30, style: RoundedCornerStyle = .continuous) -> some View {
+        modifier(StrokeModifier(cornerRadius: cornerRadius, style: style))
     }
 }
