@@ -12,7 +12,6 @@ struct HomeView: View {
     
     @Namespace var namespace
     @State var hasScrolled = false
-    @State var show = false
     @State var showStatusBar = true
     @State var selectedID = Self.defaultID
     @State var showCourse = false
@@ -62,7 +61,7 @@ struct HomeView: View {
                     spacing: 20
                 ) {
                     // Meng（作者）的做法：全部卡片都替换成占位符
-//                    if !show {
+//                    if !model.showDetail {
 //                        cards
 //                    } else {
 //                        placeholder
@@ -89,13 +88,13 @@ struct HomeView: View {
                 NavigationBar(title: "Featured", hasScrolled: $hasScrolled)
             )
             
-            if show {
+            if model.showDetail {
                 detail
             }
         }
         .statusBar(hidden: !showStatusBar)
         // `onChange`用于监听某个状态值的变化，类似KVC
-        .onChange(of: show) { newValue in
+        .onChange(of: model.showDetail) { newValue in
             withAnimation(newValue ? .openCard : .closeCard) {
                 showStatusBar = !newValue
                 
@@ -183,7 +182,7 @@ struct HomeView: View {
                 .accessibility(hidden: true) // 对[可访问性]的检测进行隐藏
         )
         .sheet(isPresented: $showCourse) {
-            CourseView(namespace: namespace, course: featuredCourses[selectedIndex], show: $showCourse)
+            CourseView(namespace: namespace, course: featuredCourses[selectedIndex], isDraggable: false)
         }
     }
     
@@ -198,10 +197,9 @@ struct HomeView: View {
                     .opacity(0.3)
                     .padding(20)
             } else {
-                CourseItem(namespace: namespace, course: course, show: $show)
+                CourseItem(namespace: namespace, course: course)
                     .onTapGesture {
                         withAnimation(.openCard) {
-                            show = true
                             model.showDetail = true
                             selectedID = course.id
                         }
@@ -212,10 +210,9 @@ struct HomeView: View {
     
     var cards: some View {
         ForEach(courses) { course in
-            CourseItem(namespace: namespace, course: course, show: $show)
+            CourseItem(namespace: namespace, course: course)
                 .onTapGesture {
                     withAnimation(.openCard) { // .linear(duration: 1)
-                        show = true
                         model.showDetail = true
                         selectedID = course.id
                     }
@@ -240,7 +237,7 @@ struct HomeView: View {
     
     var detail: some View {
         // PS：由于是不同的`View`之间的切换，关闭的动画效果在`Preview`是没有效果的，在模拟器或真机上才有。
-        CourseView(namespace: namespace, course: courses.first(where: { $0.id == selectedID }) ?? courses[0], show: $show)
+        CourseView(namespace: namespace, course: courses.first(where: { $0.id == selectedID }) ?? courses[0])
             // 层级往上挪，否则关闭时会被上面子视图盖住
             .zIndex(1)
             // 如果已经有子视图使用了`matchedGeometryEffect`，那么其他子视图会自动带有淡入淡出的过渡效果，并且动画曲线和时间跟`matchedGeometryEffect`一致，

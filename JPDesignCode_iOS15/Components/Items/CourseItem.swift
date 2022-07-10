@@ -13,7 +13,6 @@ struct CourseItem: View {
     // 声明这是从外界传入的类型定义：
     var namespace: Namespace.ID
     var course: Course = courses[0]
-    @Binding var show: Bool
     
     var body: some View {
         VStack {
@@ -66,6 +65,6 @@ struct CourseItem_Previews: PreviewProvider {
     @Namespace static var namespace
     
     static var previews: some View {
-        CourseItem(namespace: namespace, show: .constant(false))
+        CourseItem(namespace: namespace)
     }
 }

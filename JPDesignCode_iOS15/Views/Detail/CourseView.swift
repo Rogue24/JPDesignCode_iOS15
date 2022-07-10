@@ -13,13 +13,13 @@ struct CourseView: View {
     // 声明这是从外界传入的类型定义：
     var namespace: Namespace.ID
     var course: Course = courses[0]
-    @Binding var show: Bool
-    @State var appear = [false, false, false]
+    @State var appear = [false, false, false, true]
     @State var viewState: CGSize = .zero
     @State var isDraggable = true
     @State var showSection = false
     @State var selectedIndex = 0
     @EnvironmentObject var model: Model
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack {
@@ -42,7 +42,7 @@ struct CourseView: View {
             }
             // 设置该视图的坐标命名空间，可以让`GeometryReader`监听【相对于】该视图上的坐标变化。
             .coordinateSpace(name: "scroll")
-            .background(Color("Background"))
+            .background(Color("Background").opacity(appear[3] ? 1 : 0))
             .mask(RoundedRectangle(cornerRadius: viewState.width / 3, style: .continuous))
             .shadow(color: .black.opacity(0.3), radius: 30, x: 0, y: 10)
             .scaleEffect(1 + viewState.width / -500)
@@ -58,8 +58,8 @@ struct CourseView: View {
         .onAppear {
             fadeIn()
         }
-        .onChange(of: show) {
-            guard !$0 else { return }
+        .onChange(of: model.showDetail) { newValue in
+            guard !newValue else { return }
             fadeOut()
         }
     }
@@ -146,9 +146,12 @@ struct CourseView: View {
     
     var button: some View {
         Button {
-            withAnimation(.closeCard) {
-                show = false
-                model.showDetail = false
+            if isDraggable {
+                withAnimation(.closeCard) {
+                    model.showDetail = false
+                }
+            } else {
+                dismiss()
             }
         } label: {
             Image(systemName: "xmark")
@@ -205,7 +208,7 @@ struct CourseView: View {
     }
     
     var drag: some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 30, coordinateSpace: .local)
             .onChanged { value in
                 // 左边边沿位置才触发
                 guard value.startLocation.x < 100 else { return }
@@ -218,7 +221,7 @@ struct CourseView: View {
                     // 变化值的差值有时候会偏大，导致拖拽过程可能不是很平滑（类似掉帧）
 //                    viewState = value.translation
                     // 带上动画效果避免掉帧的情况
-                    withAnimation(.closeCard) {
+                    withAnimation {
                         viewState = value.translation
                     }
                 }
@@ -245,20 +248,22 @@ struct CourseView: View {
     }
     
     func fadeOut() {
-        appear[0] = false
-        appear[1] = false
-        appear[2] = false
+        withAnimation(.easeOut(duration: 0.1)) {
+            appear[0] = false
+            appear[1] = false
+            appear[2] = false
+            appear[3] = false
+        }
     }
     
     func recover() {
-        withAnimation(.closeCard) {
+        withAnimation(.openCard) {
             viewState = .zero
         }
     }
     
     func close() {
         withAnimation(.closeCard.delay(0.3)) {
-            show = false
             model.showDetail = false
         }
         
@@ -274,7 +279,7 @@ struct CourseView_Previews: PreviewProvider {
     @Namespace static var namespace
     
     static var previews: some View {
-        CourseView(namespace: namespace, show: .constant(true))
+        CourseView(namespace: namespace)
             // 如果View里面使用了环境变量，在Preview中则需要在这里初始化该环境变量给到View使用，否则预览会报错
             .environmentObject(Model())
     }

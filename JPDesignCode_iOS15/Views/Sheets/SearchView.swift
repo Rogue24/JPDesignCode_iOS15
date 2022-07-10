@@ -79,7 +79,7 @@ struct SearchView: View {
                 }
             )
             .sheet(isPresented: $show) {
-                CourseView(namespace: namespace, course: courses[selectedIndex], show: $show)
+                CourseView(namespace: namespace, course: courses[selectedIndex], isDraggable: false)
             }
         }
     }
