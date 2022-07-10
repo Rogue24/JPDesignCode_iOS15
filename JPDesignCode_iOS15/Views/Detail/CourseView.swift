@@ -208,6 +208,8 @@ struct CourseView: View {
     }
     
     var drag: some Gesture {
+        // 该手势跟上下滑手势会有冲突：当该手势结束且不返回，需要恢复原状时，`viewState`有时候无法变回0（也就是画面会缩小一点无法复原），
+        // 目前解决方法：设置`minimumDistance: 30, coordinateSpace: .local`，不过仍有小概率还是无法复原。
         DragGesture(minimumDistance: 30, coordinateSpace: .local)
             .onChanged { value in
                 // 左边边沿位置才触发
