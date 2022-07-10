@@ -2,7 +2,7 @@
 
 **SwiftUI学习项目**
 
->> 学自于国外一个很出名的SwiftUI课程：[DesignCode](https://designcode.io/)（这是收费的课程，当然也可以从其他渠道获取该资源，例如某第一或第二字母站...）。
+> 学自于国外一个很出名的SwiftUI课程：[DesignCode](https://designcode.io/)（这是收费的课程，当然也可以从其他渠道获取该资源，例如某第一或第二字母站...）。
 
 从该课程可以学到很多酷炫的`SwiftUI`用法，这里大概展示一下：
 
@@ -42,6 +42,6 @@
 
 我的小白式理解笔记目前都写在项目代码里面，后续会整理好，可能在这里更新，也有可能另外写在一篇博客上，如有需求，敬请期待~
 
-最后这里是该系列课程我跟着敲的另外两个项目：
+最后这是该系列课程（我跟着敲的）另外两个项目：
 - [JPDesignCode for iOS13](https://github.com/Rogue24/JPDesignCode)
 - [JPDesignCode for iOS14](https://github.com/Rogue24/JPDesignCodeCourse)
