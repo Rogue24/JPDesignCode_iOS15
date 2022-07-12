@@ -16,7 +16,7 @@ struct AccountView: View {
     @AppStorage("isLogged") var isLogged = true
     //【性能优化】精简模式：UI方面影响性能主要是[模糊]、[阴影]、[动画]效果，有性能问题的地方尽量少使用或直接不使用这三种耗性能的`Modified`。
     @AppStorage("isLiteMode") var isLiteMode = false
-    @ObservedObject var coinModel = CoinModel()
+    @StateObject var coinModel = CoinModel()
     
     var body: some View {
         NavigationView {
